@@ -1,16 +1,14 @@
 /*
 
-Name: Andrés Vazquez (#40007182)
+Name: Andres Vazquez (#40007182)
 Course: SOEN 423
-Assignment 2
+Assignment 3
 
 */
 
 package Models;
 
-import Models.Corba.Project;
 import Models.Enums.Location;
-
 import java.io.Serializable;
 
 public class ManagerRecord extends Record implements Serializable {

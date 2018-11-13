@@ -1,27 +1,25 @@
 /*
 
-Name: Andrés Vazquez (#40007182)
+Name: Andres Vazquez (#40007182)
 Course: SOEN 423
-Assignment 2
+Assignment 3
 
 */
 
 package Client;
 
 import Models.*;
-import Models.Corba.ICenterServer;
-import Models.Corba.ICenterServerHelper;
-import Models.Corba.Project;
 import Models.Enums.Location;
-import org.omg.CORBA.ORB;
-import org.omg.CosNaming.NamingContextExt;
-import org.omg.CosNaming.NamingContextExtHelper;
 
 import java.io.File;
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
 
 public class ManagerClient {
     
@@ -58,18 +56,14 @@ public class ManagerClient {
     
     private static void setRemoteStubs(String[] args) {
         try{
-            // create and initialize the ORB
-            ORB orb = ORB.init(args, null);
-        
-            // get the root naming context
-            org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
-            
-            // Use NamingContextExt instead of NamingContext. This is part of the Interoperable naming Service.
-            NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-        
-            // resolve the Object Reference in Naming
+        	URL url;
+        	QName qName = new QName("http://CenterServer/", "CenterServerService");
+        	Service service;
+        	
             for (Location loc: Location.values()) {
-                centerServers.put(loc, ICenterServerHelper.narrow(ncRef.resolve_str(loc.toString() + "_Server")));
+            	url = new URL("http://localhost:9000/" + loc + "_Server?wsdl");
+            	service = Service.create(url, qName);
+                centerServers.put(loc, service.getPort(ICenterServer.class));
             }
         }
         catch (Exception e) {

@@ -1,8 +1,8 @@
 /*
 
-Name: Andrés Vazquez (#40007182)
+Name: Andres Vazquez (#40007182)
 Course: SOEN 423
-Assignment 2
+Assignment 3
 
 */
 

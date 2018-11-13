@@ -1,31 +1,33 @@
 /*
 
-Name: Andrés Vazquez (#40007182)
+Name: Andres Vazquez (#40007182)
 Course: SOEN 423
-Assignment 2
+Assignment 3
 
 */
 
 package Remote;
 
 import Models.*;
-import Models.Corba.ICenterServerPOA;
-import Models.Corba.Project;
 import Models.Enums.Location;
 
+import javax.jws.WebService;
 import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.*;
 
-public class CenterServer extends ICenterServerPOA implements Runnable {
+@WebService(endpointInterface = "Models.ICenterServer", targetNamespace="http://CenterServer/")
+public class CenterServer implements ICenterServer, Runnable {
     private HashMap<Character, List<Record>> records = new HashMap<>();
     private Location centerLocation;
     
+    public CenterServer() {
+    
+    }
+    
     public CenterServer(Location location) {
-        super();
-        
         this.centerLocation = location;
         clearLogs();
     }
@@ -110,13 +112,13 @@ public class CenterServer extends ICenterServerPOA implements Runnable {
                         manager.setMailID(newValue);
                         break;
                     case "projectID":
-                        manager.getProject().projectId = newValue;
+                        manager.getProject().setProjectId(newValue);
                         break;
                     case "clientName":
-                        manager.getProject().clientName = newValue;
+                        manager.getProject().setClientName(newValue);
                         break;
                     case "projectName":
-                        manager.getProject().projectName = newValue;
+                        manager.getProject().setProjectName(newValue);
                         break;
                     case "location":
                         manager.setLocation(newValue);
@@ -270,6 +272,10 @@ public class CenterServer extends ICenterServerPOA implements Runnable {
     
         out += "----------------------------------------------------------------------------------------------------\n\n";
         System.out.println(out);
+    }
+    
+    public void setCenterLocation(Location centerLocation) {
+        this.centerLocation = centerLocation;
     }
     
     private synchronized void addRecord(Record record) {

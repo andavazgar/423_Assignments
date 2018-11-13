@@ -1,24 +1,23 @@
 /*
 
-Name: Andrés Vazquez (#40007182)
+Name: Andres Vazquez (#40007182)
 Course: SOEN 423
-Assignment 2
+Assignment 3
 
 */
 
 package Client;
 
-import Models.Corba.ICenterServer;
-import Models.Corba.ICenterServerHelper;
-import Models.Corba.Project;
 import Models.Enums.Location;
+
+import java.net.URL;
+
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
+
+import Models.ICenterServer;
 import Models.ManagerRecord;
-import org.omg.CORBA.ORB;
-import org.omg.CosNaming.NamingContextExt;
-import org.omg.CosNaming.NamingContextExtHelper;
-import org.omg.CosNaming.NamingContextPackage.CannotProceed;
-import org.omg.CosNaming.NamingContextPackage.InvalidName;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
+import Models.Project;
 
 public class ManagerClient_Test {
     
@@ -72,18 +71,12 @@ public class ManagerClient_Test {
     
             
         try {
-        // create and initialize the ORB
-        ORB orb = ORB.init(new String[]{"-ORBInitialPort", "1050"}, null);
-    
-        // get the root naming context
-        org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
-    
-        // Use NamingContextExt instead of NamingContext. This is part of the Interoperable naming Service.
-        NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-    
-        // resolve the Object Reference in Naming
-        
-            ICenterServer server = ICenterServerHelper.narrow(ncRef.resolve_str("CA_Server"));
+        	URL url = new URL("http://localhost:9000/CA_Server?wsdl");
+        	QName qName = new QName("http://CenterServer/", "CenterServerService");
+        	Service service = Service.create(url, qName);;
+        	
+            ICenterServer server = service.getPort(ICenterServer.class);
+            
             System.out.println("\n\nFINAL: getRecordCounts() = " + server.getRecordCounts("ManagerClient_Test"));
         }
         catch (Exception e) {
